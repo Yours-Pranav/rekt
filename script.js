@@ -1,95 +1,99 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-const scoreDisplay = document.getElementById("score");
-const startBtn = document.getElementById("startBtn");
-const mintBtn = document.getElementById("mintBtn");
 
-canvas.width = 300;
-canvas.height = 500;
-
-let player = { x: 140, y: 450, width: 20, height: 40 };
-let enemies = [];
+let player = { x: 130, y: 450, width: 40, height: 40, color: "cyan" };
+let obstacles = [];
 let score = 0;
-let gameRunning = false;
-let gameLoop;
+let gameOver = false;
+let speed = 3;
 
-function startGame() {
-  enemies = [];
-  score = 0;
-  gameRunning = true;
-  startBtn.disabled = true;
-  mintBtn.disabled = true;
-  gameLoop = setInterval(updateGame, 50);
-}
-
-function updateGame() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = "#00ffcc";
+function drawPlayer() {
+  ctx.fillStyle = player.color;
   ctx.fillRect(player.x, player.y, player.width, player.height);
+}
 
-  if (Math.random() < 0.05) {
-    enemies.push({ x: Math.random() * 280, y: -20, width: 20, height: 20 });
+function drawObstacles() {
+  ctx.fillStyle = "red";
+  for (let obs of obstacles) {
+    ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
   }
+}
 
-  ctx.fillStyle = "#ff0057";
-  enemies.forEach(e => {
-    e.y += 5;
-    ctx.fillRect(e.x, e.y, e.width, e.height);
-  });
-
-  enemies = enemies.filter(e => e.y < 500);
-
-  enemies.forEach(e => {
-    if (
-      player.x < e.x + e.width &&
-      player.x + player.width > e.x &&
-      player.y < e.y + e.height &&
-      player.y + player.height > e.y
-    ) {
-      endGame();
+function moveObstacles() {
+  for (let obs of obstacles) {
+    obs.y += speed;
+    if (obs.y > canvas.height) {
+      obstacles.splice(obstacles.indexOf(obs), 1);
+      score++;
     }
-  });
-
-  score++;
-  scoreDisplay.textContent = "Score: " + score;
+    if (
+      player.x < obs.x + obs.width &&
+      player.x + player.width > obs.x &&
+      player.y < obs.y + obs.height &&
+      player.y + player.height > obs.y
+    ) {
+      gameOver = true;
+    }
+  }
 }
 
-function endGame() {
-  clearInterval(gameLoop);
-  gameRunning = false;
-  startBtn.disabled = false;
-  mintBtn.disabled = false;
+function spawnObstacle() {
+  let obsWidth = 40;
+  let obsX = Math.random() * (canvas.width - obsWidth);
+  obstacles.push({ x: obsX, y: -40, width: obsWidth, height: 40 });
 }
 
+function drawScore() {
+  ctx.fillStyle = "white";
+  ctx.font = "16px Arial";
+  ctx.fillText("Score: " + score, 10, 20);
+}
+
+function gameLoop() {
+  if (gameOver) {
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.fillText("Game Over", 80, 250);
+    ctx.font = "20px Arial";
+    ctx.fillText("Score: " + score, 120, 280);
+    return;
+  }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawPlayer();
+  drawObstacles();
+  moveObstacles();
+  drawScore();
+}
+
+setInterval(gameLoop, 20);
+setInterval(spawnObstacle, 1500);
+
+// Keyboard Controls
 document.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowLeft" && player.x > 0) player.x -= 20;
-  if (e.key === "ArrowRight" && player.x < canvas.width - player.width)
-    player.x += 20;
+  if (e.key === "ArrowLeft") player.x -= 20;
+  if (e.key === "ArrowRight") player.x += 20;
 });
 
-startBtn.addEventListener("click", startGame);
-mintBtn.addEventListener("click", mintNFT);
+// Touch Controls
+let leftHeld = false;
+let rightHeld = false;
 
-async function mintNFT() {
-  if (!window.ethereum) return alert("Install MetaMask");
+document.getElementById("leftBtn").addEventListener("touchstart", () => {
+  leftHeld = true;
+});
+document.getElementById("leftBtn").addEventListener("touchend", () => {
+  leftHeld = false;
+});
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  await provider.send("eth_requestAccounts", []);
-  const signer = provider.getSigner();
+document.getElementById("rightBtn").addEventListener("touchstart", () => {
+  rightHeld = true;
+});
+document.getElementById("rightBtn").addEventListener("touchend", () => {
+  rightHeld = false;
+});
 
-  const contractAddress = "YOUR_DEPLOYED_CONTRACT_ADDRESS";
-  const abi = [
-    "function mintScoreNFT(address to, uint256 score) public returns (uint256)"
-  ];
-
-  const contract = new ethers.Contract(contractAddress, abi, signer);
-  try {
-    let tx = await contract.mintScoreNFT(await signer.getAddress(), score);
-    await tx.wait();
-    alert("NFT Minted! Score: " + score);
-  } catch (err) {
-    console.error(err);
-    alert("Mint failed");
-  }
-}
+// Continuous touch movement
+setInterval(() => {
+  if (leftHeld) player.x -= 5;
+  if (rightHeld) player.x += 5;
+}, 20);
