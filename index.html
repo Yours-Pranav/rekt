@@ -2,28 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>REKT Racer</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REKT Car Racer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #111;
+      color: white;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    canvas {
+      background: #222;
+      display: block;
+      margin-top: 10px;
+      border: 2px solid #555;
+    }
+
+    /* Touch controls */
+    .controls {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+      box-sizing: border-box;
+      z-index: 10;
+    }
+    .btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      font-size: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      user-select: none;
+    }
+    .btn:active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>🚗 REKT Racer</h1>
-    <p>Dodge traffic. Get REKT. Mint your score as an NFT on Arbitrum.</p>
-  </header>
+  <h1>🚗 REKT Car Racer</h1>
+  <canvas id="gameCanvas" width="300" height="500"></canvas>
 
-  <main>
-    <canvas id="gameCanvas"></canvas>
-    <div id="score">Score: 0</div>
-    <button id="startBtn">Start Game</button>
-    <button id="mintBtn" disabled>Mint NFT</button>
-  </main>
+  <!-- Touch Controls -->
+  <div class="controls">
+    <div id="leftBtn" class="btn">⬅️</div>
+    <div id="rightBtn" class="btn">➡️</div>
+  </div>
 
-  <footer>
-    <p>Built for Farcaster • Powered by Arbitrum</p>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
-  <script src="script.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>
