@@ -2,49 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REKT Car Racer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REKT Car Game</title>
   <style>
     body {
       margin: 0;
-      font-family: sans-serif;
       background: #111;
-      color: white;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: white;
+      font-family: sans-serif;
     }
-
     canvas {
       background: #222;
       display: block;
-      margin-top: 10px;
       border: 2px solid #555;
     }
-
-    /* Touch controls */
     .controls {
-      position: fixed;
-      bottom: 10px;
-      width: 100%;
       display: flex;
       justify-content: space-between;
-      padding: 0 20px;
-      box-sizing: border-box;
-      z-index: 10;
+      width: 300px;
+      margin-top: 10px;
     }
     .btn {
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      width: 140px;
+      height: 60px;
+      background: rgba(255,255,255,0.1);
       color: white;
       font-size: 20px;
-      padding: 20px;
-      border-radius: 10px;
-      user-select: none;
-    }
-    .btn:active {
-      background: rgba(255, 255, 255, 0.3);
+      border: 1px solid #444;
+      border-radius: 8px;
+      touch-action: none;
     }
   </style>
 </head>
@@ -52,10 +43,9 @@
   <h1>🚗 REKT Car Racer</h1>
   <canvas id="gameCanvas" width="300" height="500"></canvas>
 
-  <!-- Touch Controls -->
   <div class="controls">
-    <div id="leftBtn" class="btn">⬅️</div>
-    <div id="rightBtn" class="btn">➡️</div>
+    <button class="btn" id="leftBtn">⬅ Left</button>
+    <button class="btn" id="rightBtn">Right ➡</button>
   </div>
 
   <script src="game.js"></script>
