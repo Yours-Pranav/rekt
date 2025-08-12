@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>REKT Racer</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <h1>🚗 REKT Racer</h1>
+    <p>Dodge traffic. Get REKT. Mint your score as an NFT on Arbitrum.</p>
+  </header>
+
+  <main>
+    <canvas id="gameCanvas"></canvas>
+    <div id="score">Score: 0</div>
+    <button id="startBtn">Start Game</button>
+    <button id="mintBtn" disabled>Mint NFT</button>
+  </main>
+
+  <footer>
+    <p>Built for Farcaster • Powered by Arbitrum</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
