@@ -1,0 +1,14 @@
+{
+  "name": "rekt-racer",
+  "version": "1.0.0",
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.js --network arbitrumSepolia"
+  },
+  "dependencies": {
+    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@openzeppelin/contracts": "^4.8.3",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.14.0"
+  }
+}
