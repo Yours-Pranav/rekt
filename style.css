@@ -1,0 +1,39 @@
+body {
+  background: #0a0a0a;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  text-align: center;
+}
+
+header {
+  padding: 20px;
+}
+
+canvas {
+  background: linear-gradient(to bottom, #111, #333);
+  border: 2px solid #555;
+  display: block;
+  margin: 20px auto;
+}
+
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  background: #ff0057;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #555;
+  cursor: not-allowed;
+}
+
+footer {
+  margin-top: 20px;
+  font-size: 0.8em;
+  color: #777;
+}
