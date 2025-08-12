@@ -6,12 +6,15 @@ let obstacles = [];
 let score = 0;
 let gameOver = false;
 let speed = 3;
+let spawnTimer = 0;
 
+// Draw player
 function drawPlayer() {
   ctx.fillStyle = player.color;
   ctx.fillRect(player.x, player.y, player.width, player.height);
 }
 
+// Draw obstacles
 function drawObstacles() {
   ctx.fillStyle = "red";
   for (let obs of obstacles) {
@@ -19,6 +22,7 @@ function drawObstacles() {
   }
 }
 
+// Move obstacles + check collision
 function moveObstacles() {
   for (let obs of obstacles) {
     obs.y += speed;
@@ -26,6 +30,7 @@ function moveObstacles() {
       obstacles.splice(obstacles.indexOf(obs), 1);
       score++;
     }
+    // Collision detection
     if (
       player.x < obs.x + obs.width &&
       player.x + player.width > obs.x &&
@@ -37,19 +42,24 @@ function moveObstacles() {
   }
 }
 
+// Spawn new obstacle
 function spawnObstacle() {
   let obsWidth = 40;
   let obsX = Math.random() * (canvas.width - obsWidth);
   obstacles.push({ x: obsX, y: -40, width: obsWidth, height: 40 });
 }
 
+// Draw score
 function drawScore() {
   ctx.fillStyle = "white";
   ctx.font = "16px Arial";
   ctx.fillText("Score: " + score, 10, 20);
 }
 
+// Main game loop
 function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   if (gameOver) {
     ctx.fillStyle = "white";
     ctx.font = "30px Arial";
@@ -58,20 +68,27 @@ function gameLoop() {
     ctx.fillText("Score: " + score, 120, 280);
     return;
   }
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Spawn obstacles every 80 frames
+  spawnTimer++;
+  if (spawnTimer > 80) {
+    spawnObstacle();
+    spawnTimer = 0;
+  }
+
+  moveObstacles();
   drawPlayer();
   drawObstacles();
-  moveObstacles();
   drawScore();
 }
 
 setInterval(gameLoop, 20);
-setInterval(spawnObstacle, 1500);
 
 // Keyboard Controls
 document.addEventListener("keydown", (e) => {
-  if (e.key === "ArrowLeft") player.x -= 20;
-  if (e.key === "ArrowRight") player.x += 20;
+  if (e.key === "ArrowLeft" && player.x > 0) player.x -= 20;
+  if (e.key === "ArrowRight" && player.x < canvas.width - player.width)
+    player.x += 20;
 });
 
 // Touch Controls
@@ -94,6 +111,6 @@ document.getElementById("rightBtn").addEventListener("touchend", () => {
 
 // Continuous touch movement
 setInterval(() => {
-  if (leftHeld) player.x -= 5;
-  if (rightHeld) player.x += 5;
+  if (leftHeld && player.x > 0) player.x -= 5;
+  if (rightHeld && player.x < canvas.width - player.width) player.x += 5;
 }, 20);
